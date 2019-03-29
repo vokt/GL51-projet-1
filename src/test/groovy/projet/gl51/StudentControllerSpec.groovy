@@ -21,6 +21,5 @@ class StudentControllerSpec extends Specification {
 
         expect:
         response.status == HttpStatus.OK
-		println(response.body)
     }
 }
