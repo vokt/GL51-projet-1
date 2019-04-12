@@ -11,6 +11,6 @@ class StudentController {
 
     @Get("/")
     List<Student> index() {
-		[new Student (firstname: "jean", lastname:"Michelle"), new Student (firstname: "Thomas", lastname:"Sandy")]
+        [new Student (firstname: "Vanessa", lastname:"Tuete"), new Student (firstname: "Regis", lastname:"Mouaffo")]
     }
 }
