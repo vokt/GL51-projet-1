@@ -30,6 +30,7 @@ class MemoryProductStorage implements  ProductStorage {
 
     }
 
+
     /**
 
      * get a product by its id
