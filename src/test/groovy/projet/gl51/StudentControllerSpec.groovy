@@ -20,8 +20,6 @@ class StudentControllerSpec extends Specification {
     void "test index"() {
         given:
         def response = client.toBlocking().exchange("/student", Argument.listOf(Student).type)
-
-
         expect:
         response.status == HttpStatus.OK
         response.body()[1].firstname == "Regis"

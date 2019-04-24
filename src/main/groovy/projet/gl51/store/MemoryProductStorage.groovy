@@ -13,6 +13,7 @@ class MemoryProductStorage implements  ProductStorage {
 
     @Override
     void save(Product p) {
+        p.setId(new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()})
         products.add(p)
     }
 
@@ -52,9 +53,17 @@ class MemoryProductStorage implements  ProductStorage {
      * @param id
 
      */
-    @Override
-    void delete(String id) {
 
+    @Override
+
+    Product delete(String id) {
+        def product = products.each { Product p ->
+            if (p.id == id) {
+                products.remove(p)
+                p
+            }
+        } as Product
+        product
     }
 
     /**

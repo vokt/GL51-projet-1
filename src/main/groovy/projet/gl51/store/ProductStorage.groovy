@@ -15,8 +15,6 @@ interface ProductStorage<P> {
 
     void save(Product p)
 
-
-
     /**
 
      * updates an existing product in the store
@@ -53,7 +51,7 @@ interface ProductStorage<P> {
 
      */
 
-    void delete(String id)
+    Product delete(String id)
 
 
 
