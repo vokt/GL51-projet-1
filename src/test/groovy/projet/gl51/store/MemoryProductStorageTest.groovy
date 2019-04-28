@@ -14,11 +14,10 @@ class MemoryProductStorageTest extends Specification {
 
 
     ProductStorage store = new MemoryProductStorage()
-    String id = new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}
 
     def "Save"() {
         setup:
-            store.save(new Product(id:new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()},name: "myproduct"))
+            store.save(new Product("myproduct"))
         when:
             def all = store.all()
         then:
@@ -29,36 +28,44 @@ class MemoryProductStorageTest extends Specification {
 
     def "Update"() {
         setup:
-            def product = new Product(id: new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}, name: "myproduct", description: "product" )
+            def product = new Product("myproduct")
             store.save(product)
         when:
-            store.update(product.id,new Product(id: product.id , name: "myproduct", description: "product updated" ))
             def p = store.getByID(product.id)
+            store.update(p.id,new Product(p.id ,"myUpdatedproduct"))
+            // def p2 = store.getByID(p.id)
         then:
-            p.description == "product updated"
+            p.name != store.all().first().name
     }
 
-    def "GetByID"() {
+    def "GetByID with an existing product"() {
         setup:
-            def product = new Product(id: new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}, name: "myproduct", description: "product" )
+            def product = new Product("myproduct")
             store.save(product)
         when:
             def p = store.getByID(product.id)
         then:
             p.name == "myproduct"
-            p.description == "product"
     }
+
+
+    def "GetByID with a not existing product"() {
+        when:
+            store.getByID("199id")
+        then:
+            thrown NotExistingProductException
+    }
+
 
     def "Delete"() {
         setup:
-            def product = new Product(id: new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}, name: "myproduct", description: "product" )
+            def product = new Product("myproduct")
             store.save(product)
-            def prod = store.delete(product.id)
-     //   when:
-       //     def all = store.all()
-        expect:
-        //    ! all.contains(prod)
-            store.getByID(prod.id) == null
+        when:
+            store.delete(product.id)
+            store.getByID(product.id)
+        then:
+            thrown NotExistingProductException
     }
 
     def "All"() {

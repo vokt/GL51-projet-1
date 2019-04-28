@@ -27,10 +27,11 @@ class MemoryProductStorage implements  ProductStorage {
      */
     @Override
     void update(String id, Product p) {
+        def index
         products.each { Product p2 ->
             if (id == p2.id) {
-                products.remove(p2)
-                products.add(p)
+                index = products.indexOf(p2)
+                products.set(index,p)
             }
         }
 
@@ -47,7 +48,8 @@ class MemoryProductStorage implements  ProductStorage {
 
      */
     @Override
-    Product getByID(String id) {
+    Product getByID(String id) throws NotExistingProductException{
+
         def product
         products.each { Product p ->
             if (p.id == id) {
@@ -55,7 +57,11 @@ class MemoryProductStorage implements  ProductStorage {
             }
         }
 
-        product
+        if (product == null)
+            throw new NotExistingProductException("Le produit portant l'id "+ id +" n'existe pas.")
+        else
+            product
+
     }
 
     /**
@@ -68,12 +74,9 @@ class MemoryProductStorage implements  ProductStorage {
 
     @Override
 
-    Product delete(String id) {
+    void delete(String id) {
         def product = getByID(id)
-
         products.remove(product)
-
-        product
     }
 
     /**
