@@ -1,7 +1,7 @@
 package projet.gl51.store
 
 
-interface ProductStorage<P> {
+interface ProductStorage {
 
 
 

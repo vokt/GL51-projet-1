@@ -32,4 +32,5 @@ class Product {
         this.price = price
         this.idealTemperature = idealTemperature
     }
+
 }

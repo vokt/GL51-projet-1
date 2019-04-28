@@ -33,9 +33,10 @@ class MemoryProductStorageTest extends Specification {
         when:
             def p = store.getByID(product.id)
             store.update(p.id,new Product(p.id ,"myUpdatedproduct"))
-            // def p2 = store.getByID(p.id)
+            def p2 = store.getByID(p.id)
         then:
-            p.name != store.all().first().name
+            p2.name != p.name
+            //p2.name != store.all().first().name
     }
 
     def "GetByID with an existing product"() {
