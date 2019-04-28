@@ -17,7 +17,7 @@ class MemoryProductStorageTest extends Specification {
 
     def "Save"() {
         setup:
-            store.save(new Product("myproduct"))
+            store.save(new Product(name: "myproduct"))
         when:
             def all = store.all()
         then:
@@ -27,45 +27,19 @@ class MemoryProductStorageTest extends Specification {
     }
 
     def "Update"() {
-        setup:
-            def product = new Product("myproduct")
-            store.save(product)
-        when:
-            def p = store.getByID(product.id)
-            store.update(p.id,new Product(p.id ,"myUpdatedproduct"))
-            // def p2 = store.getByID(p.id)
-        then:
-            p.name != store.all().first().name
+
     }
 
-    def "GetByID with an existing product"() {
-        setup:
-            def product = new Product("myproduct")
-            store.save(product)
-        when:
-            def p = store.getByID(product.id)
-        then:
-            p.name == "myproduct"
+    def "GetByID"() {
     }
-
-
-    def "GetByID with a not existing product"() {
-        when:
-            store.getByID("199id")
-        then:
-            thrown NotExistingProductException
-    }
-
 
     def "Delete"() {
         setup:
-            def product = new Product("myproduct")
-            store.save(product)
+            def prod = store.delete("hjrhjr")
         when:
-            store.delete(product.id)
-            store.getByID(product.id)
+            def all = store.all()
         then:
-            thrown NotExistingProductException
+            ! all.contains(prod)
     }
 
     def "All"() {

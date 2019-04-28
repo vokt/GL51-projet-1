@@ -1,7 +1,6 @@
 package projet.gl51.store
 
 class MemoryProductStorage implements  ProductStorage {
-
     /**
 
      * creates an new product in the store
@@ -9,10 +8,12 @@ class MemoryProductStorage implements  ProductStorage {
      * @param p the product to store
 
      */
+
     List<Product> products = new ArrayList<Product>()
 
     @Override
     void save(Product p) {
+        p.setId(new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()})
         products.add(p)
     }
 
@@ -27,13 +28,6 @@ class MemoryProductStorage implements  ProductStorage {
      */
     @Override
     void update(String id, Product p) {
-        def index
-        products.each { Product p2 ->
-            if (id == p2.id) {
-                index = products.indexOf(p2)
-                products.set(index,p)
-            }
-        }
 
     }
 
@@ -48,20 +42,8 @@ class MemoryProductStorage implements  ProductStorage {
 
      */
     @Override
-    Product getByID(String id) throws NotExistingProductException{
-
-        def product
-        products.each { Product p ->
-            if (p.id == id) {
-                product = p
-            }
-        }
-
-        if (product == null)
-            throw new NotExistingProductException("Le produit portant l'id "+ id +" n'existe pas.")
-        else
-            product
-
+    Product getByID(String id) {
+        return null
     }
 
     /**
@@ -74,9 +56,14 @@ class MemoryProductStorage implements  ProductStorage {
 
     @Override
 
-    void delete(String id) {
-        def product = getByID(id)
-        products.remove(product)
+    Product delete(String id) {
+        def product = products.each { Product p ->
+            if (p.id == id) {
+                products.remove(p)
+                p
+            }
+        } as Product
+        product
     }
 
     /**

@@ -51,7 +51,7 @@ interface ProductStorage<P> {
 
      */
 
-    void delete(String id)
+    Product delete(String id)
 
 
 
