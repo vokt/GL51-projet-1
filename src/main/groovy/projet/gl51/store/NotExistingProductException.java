@@ -1,4 +1,9 @@
 package projet.gl51.store;
 
-public class NotExistingProductException {
+class NotExistingProductException extends Exception {
+
+    NotExistingProductException(String message) {
+        super(message);
+    }
+
 }
