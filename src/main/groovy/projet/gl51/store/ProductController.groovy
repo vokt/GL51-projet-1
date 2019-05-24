@@ -14,12 +14,11 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import javax.inject.Inject
 
 
-
 @Controller("/product")
 class ProductController {
 
-
-    private MemoryProductStorage inMemory = new MemoryProductStorage()
+    @Inject
+    ProductStorage inMemory
 
 
     /**
@@ -41,9 +40,10 @@ class ProductController {
     @Get("/{id}")
     Product prodById(String id) {
         try {
-            inMemory.getByID(id)
+            return inMemory.getByID(id)
         } catch (Exception e) {
             e.printStackTrace()
+            HttpStatus.NOT_FOUND
         }
 
     }
@@ -67,10 +67,15 @@ class ProductController {
      */
     @Delete(uri ="/{id}" )
     HttpStatus delete(String id){
-        
+        try {
             inMemory.delete(id)
             return HttpStatus.OK
-        
+
+        } catch (Exception e) {
+            e.printStackTrace()
+            return HttpStatus.NOT_FOUND
+        }
+
     }
 
 
@@ -79,7 +84,7 @@ class ProductController {
      * @param product
      * @return string
      */
-    @Post(uri ="/update" )
+    @Patch(uri ="/update" )
     HttpStatus update(@Body Product product) {
         inMemory.update(product.id,product)
         return HttpStatus.OK

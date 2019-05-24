@@ -74,7 +74,7 @@ class ProductControllerSpec  extends Specification{
         when:
         Product product = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
         product.description = "description updated"
-        client.toBlocking().retrieve(HttpRequest.POST('/product/update' , product), Argument.of(HttpStatus).type)
+        client.toBlocking().retrieve(HttpRequest.PATCH('/product/update' , product), Argument.of(HttpStatus).type)
 
         Product updatedProduct = client.toBlocking().retrieve(HttpRequest.GET('/product/' + product.id), Argument.of(Product).type)
 

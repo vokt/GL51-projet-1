@@ -1,5 +1,9 @@
 package projet.gl51.store
 
+import javax.inject.Singleton
+
+
+@Singleton
 class MemoryProductStorage implements  ProductStorage {
 
     /**
