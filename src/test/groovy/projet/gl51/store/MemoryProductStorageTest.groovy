@@ -17,34 +17,35 @@ class MemoryProductStorageTest extends Specification {
 
     def "Save"() {
         setup:
-            store.save(new Product("myproduct"))
+            store.save(new Product(name: "myproduct"))
         when:
             def all = store.all()
         then:
             all.size() == 1
             all.first().name == "myproduct"
-            all.first().id != null
+            all.first().id != ""
     }
 
     def "Update"() {
         setup:
-            def product = new Product("myproduct")
-            store.save(product)
+            def product = new Product(name:"myproduct")
+            String id = store.save(product)
         when:
-            def p = store.getByID(product.id)
-            store.update(p.id,new Product(p.id ,"myUpdatedproduct"))
-            // def p2 = store.getByID(p.id)
+            store.update(id,new Product(id:id ,name:"myUpdatedproduct"))
+            def p = store.getByID(id)
         then:
-            p.name != store.all().first().name
+            store.all() == [p]
+
     }
 
     def "GetByID with an existing product"() {
         setup:
-            def product = new Product("myproduct")
+            def product = new Product(name: "myproduct")
             store.save(product)
         when:
             def p = store.getByID(product.id)
         then:
+            product == p
             p.name == "myproduct"
     }
 
@@ -59,7 +60,7 @@ class MemoryProductStorageTest extends Specification {
 
     def "Delete"() {
         setup:
-            def product = new Product("myproduct")
+            def product = new Product(id:"myproduct")
             store.save(product)
         when:
             store.delete(product.id)

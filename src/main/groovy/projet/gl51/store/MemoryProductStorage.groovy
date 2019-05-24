@@ -1,5 +1,9 @@
 package projet.gl51.store
 
+import javax.inject.Singleton
+
+
+@Singleton
 class MemoryProductStorage implements  ProductStorage {
 
     /**
@@ -12,8 +16,10 @@ class MemoryProductStorage implements  ProductStorage {
     List<Product> products = new ArrayList<Product>()
 
     @Override
-    void save(Product p) {
+    String save(Product p) {
+        p.id = new Random().with {(1..6).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}
         products.add(p)
+        return p.id
     }
 
     /**
