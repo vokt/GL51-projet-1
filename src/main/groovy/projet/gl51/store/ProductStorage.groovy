@@ -1,7 +1,7 @@
 package projet.gl51.store
 
 
-interface ProductStorage<P> {
+interface ProductStorage {
 
 
 
@@ -13,7 +13,7 @@ interface ProductStorage<P> {
 
      */
 
-    void save(Product p)
+    String save(Product p)
 
     /**
 
