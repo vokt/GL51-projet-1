@@ -17,8 +17,6 @@ class ProductControllerSpec  extends Specification{
     @Shared @AutoCleanup RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 
 
-
-
     void "test allProduct"() {
 
         given:
@@ -30,55 +28,22 @@ class ProductControllerSpec  extends Specification{
 
     }
 
-    void "test prodById with an existing product"() {
-        setup:
-        Product product = new Product(name: name, description: description, price: price, idealTemperature: idealTemperature)
-        String id = client.toBlocking().retrieve(HttpRequest.POST('/product/save', product))
-
-        when:
-        Product retrievedProduct = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
-
-        then:
-        product.name == retrievedProduct.name
-        product.description == retrievedProduct.description
-        product.price == retrievedProduct.price
-        product.idealTemperature == retrievedProduct.idealTemperature
-
-        where:
-        name | description | price | idealTemperature
-        "name" | "description" | 500 | 10
-    }
-
-    void "test prodById with a not existing product"() {
-
-        setup:
-        String id = "199id"
-
-        when:
-        Product product = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
-
-        then:
-        thrown HttpClientResponseException
-
-    }
-
 
     void "test save"() {
         setup:
         Product product = new Product(name: name, description: description, price: price, idealTemperature: idealTemperature)
 
-        when:
-        client.toBlocking().retrieve(HttpRequest.POST('/product/save', product))
-        List<Product> products = client.toBlocking().retrieve(HttpRequest.GET("/product"), Argument.listOf(Product).type);
+        when: String id = client.toBlocking().retrieve(HttpRequest.POST('/product/save', product))
+
+        Product p = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
 
         then:
-        products.size() == 1
         product.id != ""
-        products.first().id != ""
-        products.first().name == name
-        products.first().description == description
-        products.first().price == price
-        products.first().idealTemperature == idealTemperature
+        p.id != ""
+        p.name == name
+        p.description == description
+        p.price == price
+        p.idealTemperature == idealTemperature
 
 
         where:
@@ -89,8 +54,7 @@ class ProductControllerSpec  extends Specification{
 
     void "test delete"() {
         setup:
-        client.toBlocking().retrieve(HttpRequest.POST('/product/save', new Product(name: "name", description: "description", price: 200, idealTemperature: 5)))
-        String id = client.toBlocking().retrieve(HttpRequest.POST('/product/save', new Product(name: "name2", description: "description2", price: 600, idealTemperature: 10)))
+        String id = client.toBlocking().retrieve(HttpRequest.POST('/product/save', new Product(name: "name", description: "description", price: 600, idealTemperature: 10)))
         Product product = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
 
         when:
@@ -126,5 +90,36 @@ class ProductControllerSpec  extends Specification{
 
     }
 
+    void "test prodById with an existing product"() {
+        setup:
+        Product product = new Product(name: name, description: description, price: price, idealTemperature: idealTemperature)
+        String id = client.toBlocking().retrieve(HttpRequest.POST('/product/save', product))
+
+        when:
+        Product retrievedProduct = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
+
+        then:
+        product.name == retrievedProduct.name
+        product.description == retrievedProduct.description
+        product.price == retrievedProduct.price
+        product.idealTemperature == retrievedProduct.idealTemperature
+
+        where:
+        name | description | price | idealTemperature
+        "name" | "description" | 500 | 10
+    }
+
+    void "test prodById with a not existing product"() {
+
+        setup:
+        String id = "199id"
+
+        when:
+        Product product = client.toBlocking().retrieve(HttpRequest.GET('/product/' + id), Argument.of(Product).type)
+
+        then:
+        thrown HttpClientResponseException
+
+    }
 
 }
